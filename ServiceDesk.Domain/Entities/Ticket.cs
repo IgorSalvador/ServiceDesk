@@ -10,65 +10,63 @@ public class Ticket : Entity
     public TicketPriority Priority { get; private set; }
     public TicketStatus Status { get; private set; }
 
-    // Solicitante
     public Guid RequesterId { get; private set; }
-
-    // --- MÁQUINA DE ESTADOS (Onde o ticket está) ---
 
     public Guid? CurrentWorkflowId { get; private set; }
 
     public Guid? CurrentStepId { get; private set; }
-    public WorkflowStep CurrentStep { get; private set; }
+    public virtual WorkflowStep? CurrentStep { get; private set; }
 
-    public Guid CurrentQueueId { get; private set; }
-    public ServiceQueue CurrentQueue { get; private set; }
+    public Guid? CurrentQueueId { get; private set; }
+    public virtual ServiceQueue? CurrentQueue { get; private set; }
 
-    // Quem pegou o ticket para trabalhar? (Pode ser null se estiver solto na fila)
     public Guid? AssignedUserId { get; private set; }
 
-    // --- CONTROLE DE SLA (Por Etapa) ---
+    public DateTime CurrentStepEntryDate { get; private set; }
+    public DateTime? CurrentStepDeadline { get; private set; }
 
-    public DateTime CurrentStepEntryDate { get; private set; } // Quando entrou nesta etapa
-    public DateTime? CurrentStepDeadline { get; private set; } // Quando estoura o SLA dessa etapa
+    public Ticket() { }
 
-    // Construtor para Abertura de Chamado
     public Ticket(string title, string description, Guid requesterId, TicketPriority priority)
     {
         Title = title;
         Description = description;
         RequesterId = requesterId;
         Priority = priority;
-        Status = TicketStatus.New;
-        Protocol = DateTime.Now.ToString("yyyyMMddHHmmss"); // Gerador simples por enquanto
-    }
 
-    // Método de Domínio: Inicializar o Workflow
+        Status = TicketStatus.New;
+        Protocol = DateTime.Now.ToString("yyyyMMddHHmmss") + new Random().Next(100, 999).ToString();
+    }
     public void StartWorkflow(Workflow workflow, WorkflowStep firstStep)
     {
         CurrentWorkflowId = workflow.Id;
         MoveToStep(firstStep);
     }
 
-    // Método de Domínio: Avançar Etapa
     public void MoveToStep(WorkflowStep nextStep)
     {
         CurrentStepId = nextStep.Id;
-        CurrentQueueId = nextStep.TargetQueueId; // O Ticket muda de fila automaticamente!
+        CurrentQueueId = nextStep.TargetQueueId;
         CurrentStepEntryDate = DateTime.UtcNow;
 
-        // Calcula o deadline baseado na configuração do passo
+        // Calcula o deadline
         CurrentStepDeadline = DateTime.UtcNow.AddHours(nextStep.SLAInHours);
 
-        // Reseta o técnico atribuído, pois mudou de fila/departamento
         AssignedUserId = null;
 
         Status = TicketStatus.InProgress;
     }
 
-    // Método de Domínio: Resolver Ticket
     public void Resolve()
     {
         Status = TicketStatus.Resolved;
-        CurrentStepDeadline = null; // Para o relógio
+        CurrentStepDeadline = null;
+    }
+
+    // Método extra útil para self-assign
+    public void AssignToUser(Guid userId)
+    {
+        AssignedUserId = userId;
+        // Lógica adicional se necessário (ex: logar histórico)
     }
 }

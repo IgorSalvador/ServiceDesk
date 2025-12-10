@@ -11,7 +11,12 @@ public class WorkflowStep : Entity
     // Definição de Comportamento
     public int SLAInHours { get; private set; } // Requisito: SLA conta por parte do fluxo
     public Guid TargetQueueId { get; private set; } // Ao entrar aqui, vai para qual fila?
-    public ServiceQueue TargetQueue { get; private set; }
+    public ServiceQueue TargetQueue { get; private set; } = null!;
+
+    private WorkflowStep() : base()
+    {
+        StepName = string.Empty;
+    }
 
     public WorkflowStep(Guid workflowId, string stepName, int orderIndex, int slaInHours, Guid targetQueueId) : base()
     {

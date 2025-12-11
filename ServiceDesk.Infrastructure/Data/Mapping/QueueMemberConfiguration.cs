@@ -14,5 +14,10 @@ public class QueueMemberConfiguration : IEntityTypeConfiguration<QueueMember>
 
         // Index para performance: Buscar todas as filas de um usuário rapidamente
         builder.HasIndex(x => x.UserId);
+
+        builder.HasOne(x => x.User)
+           .WithMany(u => u.QueueMemberships)
+           .HasForeignKey(x => x.UserId)
+           .OnDelete(DeleteBehavior.Cascade);
     }
 }

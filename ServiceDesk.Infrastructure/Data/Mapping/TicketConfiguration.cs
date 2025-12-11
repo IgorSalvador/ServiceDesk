@@ -42,6 +42,16 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .HasForeignKey(x => x.CurrentStepId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(x => x.Requester)
+           .WithMany(u => u.RequestedTickets)
+           .HasForeignKey(x => x.RequesterId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(x => x.AssignedUser)
+           .WithMany(u => u.AssignedTickets)
+           .HasForeignKey(x => x.AssignedUserId)
+           .OnDelete(DeleteBehavior.Restrict);
+
         // ÍNDICES DE PERFORMANCE
         // 1. Dashboard principal: Tickets por Fila e Status
         builder.HasIndex(x => new { x.CurrentQueueId, x.Status });

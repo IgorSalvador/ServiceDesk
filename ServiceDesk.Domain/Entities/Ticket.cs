@@ -11,6 +11,7 @@ public class Ticket : Entity
     public TicketStatus Status { get; private set; }
 
     public Guid RequesterId { get; private set; }
+    public virtual ApplicationUser Requester { get; private set; } = null!;
 
     public Guid? CurrentWorkflowId { get; private set; }
 
@@ -21,11 +22,17 @@ public class Ticket : Entity
     public virtual ServiceQueue? CurrentQueue { get; private set; }
 
     public Guid? AssignedUserId { get; private set; }
+    public virtual ApplicationUser? AssignedUser { get; private set; }
 
     public DateTime CurrentStepEntryDate { get; private set; }
     public DateTime? CurrentStepDeadline { get; private set; }
 
-    public Ticket() { }
+    protected Ticket()
+    {
+        Title = string.Empty;
+        Description = string.Empty;
+        Protocol = string.Empty;
+    }
 
     public Ticket(string title, string description, Guid requesterId, TicketPriority priority)
     {

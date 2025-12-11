@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ServiceDesk.Domain.Entities;
 
 namespace ServiceDesk.Infrastructure.Data;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) 
+    : IdentityDbContext<Domain.Entities.ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<ServiceQueue> ServiceQueues { get; set; }

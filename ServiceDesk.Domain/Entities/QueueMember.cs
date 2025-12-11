@@ -6,6 +6,8 @@ public class QueueMember
     public ServiceQueue ServiceQueue { get; private set; } = null!;
 
     public Guid UserId { get; private set; }
+    public ApplicationUser User { get; set; } = null!;
+
     public bool IsQueueManager { get; private set; }
     public DateTime JoinedAt { get; private set; }
 

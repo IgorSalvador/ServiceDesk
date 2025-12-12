@@ -4,7 +4,7 @@ using ServiceDesk.Domain.Entities;
 
 namespace ServiceDesk.Infrastructure.Data.Mapping;
 
-public class WorkflowConfiguration : IEntityTypeConfiguration<Workflow>
+public class WorkflowMapping : IEntityTypeConfiguration<Workflow>
 {
     public void Configure(EntityTypeBuilder<Workflow> builder)
     {

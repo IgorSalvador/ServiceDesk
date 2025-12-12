@@ -6,7 +6,14 @@ using ServiceDesk.Domain.Entities;
 namespace ServiceDesk.Infrastructure.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) 
-    : IdentityDbContext<Domain.Entities.ApplicationUser, IdentityRole<Guid>, Guid>(options)
+    : IdentityDbContext<ApplicationUser, 
+        IdentityRole<Guid>, 
+        Guid,
+        IdentityUserClaim<Guid>,
+        IdentityUserRole<Guid>,
+        IdentityUserLogin<Guid>,
+        IdentityRoleClaim<Guid>,
+        IdentityUserToken<Guid>>(options)
 {
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<ServiceQueue> ServiceQueues { get; set; }
@@ -18,8 +25,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }

@@ -4,7 +4,7 @@ using ServiceDesk.Domain.Entities;
 
 namespace ServiceDesk.Infrastructure.Data.Mapping;
 
-public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
+public class TicketMapping : IEntityTypeConfiguration<Ticket>
 {
     public void Configure(EntityTypeBuilder<Ticket> builder)
     {

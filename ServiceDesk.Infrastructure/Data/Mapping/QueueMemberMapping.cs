@@ -4,7 +4,7 @@ using ServiceDesk.Domain.Entities;
 
 namespace ServiceDesk.Infrastructure.Data.Mapping;
 
-public class QueueMemberConfiguration : IEntityTypeConfiguration<QueueMember>
+public class QueueMemberMapping : IEntityTypeConfiguration<QueueMember>
 {
     public void Configure(EntityTypeBuilder<QueueMember> builder)
     {

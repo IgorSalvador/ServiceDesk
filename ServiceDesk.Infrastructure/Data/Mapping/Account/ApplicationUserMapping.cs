@@ -5,7 +5,7 @@ using ServiceDesk.Domain.Entities;
 
 namespace ServiceDesk.Infrastructure.Data.Mapping.Account;
 
-public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
+public class ApplicationUserMapping : IEntityTypeConfiguration<ApplicationUser>
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {

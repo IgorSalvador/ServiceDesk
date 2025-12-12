@@ -4,7 +4,7 @@ using ServiceDesk.Domain.Entities;
 
 namespace ServiceDesk.Infrastructure.Data.Mapping;
 
-public class ServiceSubcategoryConfiguration : IEntityTypeConfiguration<ServiceSubcategory>
+public class ServiceSubcategoryMapping : IEntityTypeConfiguration<ServiceSubcategory>
 {
     public void Configure(EntityTypeBuilder<ServiceSubcategory> builder)
     {

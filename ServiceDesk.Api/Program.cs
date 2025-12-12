@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Identity;
+using ServiceDesk.Api.Extensions;
+using ServiceDesk.Application;
 using ServiceDesk.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
@@ -23,5 +27,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await app.UseDatabaseSeeding();
 
 app.Run();

@@ -7,4 +7,22 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceDesk.Domain\ServiceDesk.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Queues\Commands\" />
+    <Folder Include="Features\Queues\Queries\" />
+    <Folder Include="Features\Tickets\Commands\" />
+    <Folder Include="Features\Tickets\Queries\" />
+    <Folder Include="Features\Workflows\Commands\" />
+    <Folder Include="Features\Workflows\Queries\" />
+  </ItemGroup>
+
 </Project>

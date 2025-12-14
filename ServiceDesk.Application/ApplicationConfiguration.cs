@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceDesk.Application.Common.Behaviors;
 using System.Reflection;
@@ -8,19 +9,17 @@ namespace ServiceDesk.Application;
 
 public static class ApplicationConfiguration
 {
-    extension(IServiceCollection services)
+    extension(WebApplicationBuilder builder)
     {
-        public IServiceCollection AddApplication()
+        public void AddApplication()
         {
-            services.AddMediatR(cfg =>
+            builder.Services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssemblies(typeof(ApplicationConfiguration).Assembly);
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             });
 
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-            return services;
+            builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

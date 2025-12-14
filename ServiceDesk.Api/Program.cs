@@ -1,19 +1,25 @@
 using Microsoft.AspNetCore.Identity;
-using ServiceDesk.Api;
-using ServiceDesk.Api.Extensions;
+using ServiceDesk.Api.Common.Api;
+using ServiceDesk.Api.Common.Data;
 using ServiceDesk.Application;
 using ServiceDesk.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddApiConfiguration(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddApplication();
+
+builder.AddConfiguration();
+builder.AddCrossOrigin();
+builder.AddDocumentation();
+builder.AddJwtAuthentication();
+
+builder.AddInfrastructure();
+builder.AddApplication();
 
 var app = builder.Build();
 
-app.ConfigureDevEnvironment();
+if (app.Environment.IsDevelopment())
+    app.ConfigureDevEnvironment();
+
 app.UseHttpsRedirection();
 app.UseSecurity();
 app.MapControllers();

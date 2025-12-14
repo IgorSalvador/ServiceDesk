@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,34 +13,32 @@ namespace ServiceDesk.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-    extension(IServiceCollection services)
+    extension(WebApplicationBuilder builder)
     {
-        public IServiceCollection AddInfrastructure(IConfiguration configuration)
+        public WebApplicationBuilder AddInfrastructure()
         {
-            services
-                .AddContext(configuration)
-                .AddIdentity()
-                .AddServices();
+            builder.AddContext();
+            builder.AddIdentity();
+            builder.AddServices();
+            builder.AddRepositories();
 
-            return services;
+            return builder;
         }
 
-        public IServiceCollection AddContext(IConfiguration configuration)
+        public void AddContext()
         {
-            services.AddDbContext<AppDbContext>(options =>
+            builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
             });
-
-            return services;
         }
 
-        public IServiceCollection AddIdentity()
+        public void AddIdentity()
         {
-            services.AddScoped<DbInitializer>();
+            builder.Services.AddScoped<DbInitializer>();
 
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -50,22 +49,16 @@ public static class InfrastructureConfiguration
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders(); ;
-
-            return services;
         }
 
-        public IServiceCollection AddServices()
+        public void AddServices()
         {
-            services.AddScoped<ITokenService, JwtTokenService>();
-
-            return services;
+            builder.Services.AddScoped<ITokenService, JwtTokenService>();
         }
 
-        public IServiceCollection AddRepositories()
+        public void AddRepositories()
         {
             // Adicionar repositórios quando implementar
-
-            return services;
         }
     }
 }

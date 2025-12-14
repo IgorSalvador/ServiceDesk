@@ -1,6 +1,7 @@
-﻿using ServiceDesk.Infrastructure.Data.Seeds;
+﻿using ServiceDesk.Api;
+using ServiceDesk.Infrastructure.Data.Seeds;
 
-namespace ServiceDesk.Api.Extensions
+namespace ServiceDesk.Api.Common.Data
 {
     public static class DatabaseManagementExtension
     {

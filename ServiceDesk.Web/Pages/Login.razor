@@ -1,0 +1,95 @@
+﻿@page "/"
+@page "/login"
+@layout LoginLayout
+
+<PageTitle>HDE - Login</PageTitle>
+
+<MudCard Class="pa-4" Style="width: 400px; border-radius: 8px;" Elevation="4">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary" Class="mb-2"><b>HDE</b> Acesso</MudText>
+            <MudText Typo="Typo.body2" Align="Align.Center">Entre com suas credenciais</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+
+    <MudCardContent>
+        <MudForm>
+            <MudTextField T="string"
+                          Label="E-mail"
+                          @bind-Value="email"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Email"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Email"
+                          Required="true"
+                          Class="mb-4" />
+
+            <MudTextField T="string"
+                          Label="Senha"
+                          @bind-Value="password"
+                          Variant="Variant.Outlined"
+                          InputType="@passwordInputType"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@passwordInputIcon"
+                          OnAdornmentClick="TogglePasswordVisibility"
+                          Required="true" />
+        </MudForm>
+    </MudCardContent>
+
+    <MudCardActions Class="d-flex justify-center pa-4">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   FullWidth="true"
+                   Size="Size.Large"
+                   OnClick="DoLoginAsync"
+                   Disabled="@processing">
+            @if (processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Entrando...</MudText>
+            }
+            else
+            {
+                <MudText>ACESSAR SISTEMA</MudText>
+            }
+        </MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    // Variáveis de Estado
+    bool processing = false;
+    string email = "";
+    string password = "";
+
+    // Controle visual da senha (Olhinho)
+    bool isPasswordVisible;
+    InputType passwordInputType = InputType.Password;
+    string passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void TogglePasswordVisibility()
+    {
+        if (isPasswordVisible)
+        {
+            isPasswordVisible = false;
+            passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            passwordInputType = InputType.Password;
+        }
+        else
+        {
+            isPasswordVisible = true;
+            passwordInputIcon = Icons.Material.Filled.Visibility;
+            passwordInputType = InputType.Text;
+        }
+    }
+
+    async Task DoLoginAsync()
+    {
+        processing = true;
+        await Task.Delay(2000);
+
+        Console.WriteLine($"Tentativa de login: {email}");
+
+        processing = false;
+    }
+}

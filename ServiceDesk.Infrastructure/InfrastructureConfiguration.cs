@@ -10,48 +10,51 @@ namespace ServiceDesk.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        services
-            .AddContext(configuration)
-            .AddIdentity();
-
-        return services;
-    }
-
-    public static IServiceCollection AddContext(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddDbContext<AppDbContext>(options =>
+        public IServiceCollection AddInfrastructure(IConfiguration configuration)
         {
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
-        });
+            services
+                .AddContext(configuration)
+                .AddIdentity();
 
-        return services;
-    }
+            return services;
+        }
 
-    public static IServiceCollection AddIdentity(this IServiceCollection services)
-    {
-        services.AddScoped<DbInitializer>();
-
-        services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+        public IServiceCollection AddContext(IConfiguration configuration)
         {
-            options.Password.RequireDigit = true;
-            options.Password.RequireLowercase = true;
-            options.Password.RequireUppercase = true;
-            options.Password.RequireNonAlphanumeric = true;
-            options.Password.RequiredLength = 8;
-            options.Password.RequiredUniqueChars = 1;
-        })
-        .AddEntityFrameworkStores<AppDbContext>()
-        .AddDefaultTokenProviders(); ;
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
+            });
 
-        return services;
-    }
+            return services;
+        }
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services)
-    {
-        // Adicione aqui os repositórios
-        return services;
+        public IServiceCollection AddIdentity()
+        {
+            services.AddScoped<DbInitializer>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequiredUniqueChars = 1;
+            })
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders(); ;
+
+            return services;
+        }
+
+        public IServiceCollection AddRepositories()
+        {
+            // Adicione aqui os repositórios
+            return services;
+        }
     }
 }

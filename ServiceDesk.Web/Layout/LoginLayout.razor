@@ -1,11 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme="Configuration.Theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudMainContent Class="d-flex align-center justify-center mud-width-full" Style="height: 100vh; background-color: #f5f5f5;">
+    <MudMainContent Class="d-flex align-center justify-center mud-width-full mud-theme-background"
+                    Style="height: 100vh;">
         @Body
     </MudMainContent>
 </MudLayout>

@@ -1,0 +1,127 @@
+﻿@page "/"
+@page "/login"
+@layout LoginLayout
+
+<PageTitle>ServiceDesk - Login</PageTitle>
+
+<MudGrid Spacing="0" Justify="Justify.Center" AlignItems="AlignItems.Center" Style="height: 100%;">
+
+    <MudItem xs="12" sm="8" md="6" lg="4" xl="3">
+
+        <MudPaper Elevation="4" Class="pa-8 mx-4" Style="border-radius: 12px;">
+            <MudStack Spacing="6">
+
+                <MudStack AlignItems="AlignItems.Center" Spacing="1">
+                    <MudIcon Icon="@Icons.Material.Filled.DisplaySettings"
+                             Color="Color.Primary"
+                             Style="width: 56px; height: 56px;"
+                             Class="mb-2" />
+
+                    <MudText Typo="Typo.h4" Color="Color.Primary" Style="font-weight: 700;">
+                        ServiceDesk
+                    </MudText>
+                    <MudText Typo="Typo.subtitle1" Color="Color.Secondary" Align="Align.Center">
+                        <strong>Helpdesk Enterprise</strong><br />
+                        <span style="font-size: 0.8em; opacity: 0.8">Acesso Corporativo</span>
+                    </MudText>
+                </MudStack>
+
+                <MudForm @ref="form" @bind-IsValid="@success">
+                    <MudStack Spacing="4">
+                        <MudTextField T="string"
+                                      Label="E-mail"
+                                      @bind-Value="email"
+                                      Variant="Variant.Outlined"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Email"
+                                      AdornmentColor="Color.Primary"
+                                      Required="true"
+                                      RequiredError="E-mail obrigatório"
+                                      Margin="Margin.Dense" />
+
+                        <MudTextField T="string"
+                                      Label="Senha"
+                                      @bind-Value="password"
+                                      Variant="Variant.Outlined"
+                                      InputType="@passwordInputType"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@passwordInputIcon"
+                                      OnAdornmentClick="TogglePasswordVisibility"
+                                      Required="true"
+                                      RequiredError="Senha obrigatória"
+                                      Margin="Margin.Dense" />
+
+                        <div class="d-flex justify-space-between align-center">
+                            <MudCheckBox T="bool" Label="Lembrar-me" Color="Color.Primary" Dense="true" Size="Size.Small" />
+                            <MudLink Href="#" Typo="Typo.caption" Color="Color.Secondary" Underline="Underline.Always">
+                                Recuperar senha
+                            </MudLink>
+                        </div>
+                    </MudStack>
+                </MudForm>
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           FullWidth="true"
+                           OnClick="DoLoginAsync"
+                           Disabled="@processing"
+                           Class="py-3 elevation-0"
+                           Style="font-weight: 600; letter-spacing: 0.5px;">
+                    @if (processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" Color="Color.Surface" />
+                        <MudText Class="ms-2">AUTENTICANDO...</MudText>
+                    }
+                    else
+                    {
+                        <MudText>ENTRAR</MudText>
+                    }
+                </MudButton>
+
+            </MudStack>
+        </MudPaper>
+
+        <MudText Typo="Typo.caption" Align="Align.Center" Class="d-block mt-6 text-muted">
+            © @DateTime.Now.Year ServiceDesk Systems. Versão 1.0
+        </MudText>
+
+    </MudItem>
+</MudGrid>
+
+@code {
+    MudForm? form;
+    bool success;
+    bool processing = false;
+    string email = "";
+    string password = "";
+    bool isPasswordVisible;
+    InputType passwordInputType = InputType.Password;
+    string passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void TogglePasswordVisibility()
+    {
+        if (isPasswordVisible)
+        {
+            isPasswordVisible = false;
+            passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            passwordInputType = InputType.Password;
+        }
+        else
+        {
+            isPasswordVisible = true;
+            passwordInputIcon = Icons.Material.Filled.Visibility;
+            passwordInputType = InputType.Text;
+        }
+    }
+
+    async Task DoLoginAsync()
+    {
+        await form!.Validate();
+        if (!form.IsValid) return;
+
+        processing = true;
+        await Task.Delay(2000);
+        processing = false;
+    }
+}

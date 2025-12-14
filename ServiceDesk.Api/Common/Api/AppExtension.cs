@@ -16,5 +16,10 @@ public static class AppExtension
             app.UseAuthentication();
             app.UseAuthorization();
         }
+
+        public void UseCrossOrigin()
+        {
+            app.UseCors(ApiConfiguration.CorsPolicyName);
+        }
     }
 }

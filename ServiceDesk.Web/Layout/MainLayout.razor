@@ -1,26 +1,70 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme="Configuration.Theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h6" Class="ml-3">HDE - Helpdesk Enterprise</MudText>
+    <MudAppBar Elevation="0" Border="true" Color="Color.Surface" Fixed="true">
+
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Primary"
+                       Edge="Edge.Start"
+                       OnClick="@((e) => DrawerToggle())" />
+
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="ml-3">
+            <MudIcon Icon="@Icons.Material.Filled.DisplaySettings" Color="Color.Primary" />
+            <MudText Typo="Typo.h6" Color="Color.Primary" Style="font-weight: 700;">
+                HDE <span style="font-weight: 300; color: var(--mud-palette-text-secondary);">Enterprise</span>
+            </MudText>
+        </MudStack>
+
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" />
+
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4">
+
+            <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                <MudStack Spacing="0" AlignItems="AlignItems.End">
+                    <MudText Typo="Typo.body2" Style="font-weight: 600;">Administrador</MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">System Admin</MudText>
+                </MudStack>
+            </MudHidden>
+
+            <MudAvatar Color="Color.Primary" Variant="Variant.Outlined">A</MudAvatar>
+
+            <MudTooltip Text="Sair do Sistema">
+                <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Secondary" />
+            </MudTooltip>
+        </MudStack>
+
     </MudAppBar>
 
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <MudNavMenu>
+    <MudDrawer @bind-Open="_drawerOpen"
+               ClipMode="DrawerClipMode.Always"
+               Elevation="0"
+               Border="true"
+               Breakpoint="Breakpoint.Md"
+               PreserveOpenState="true">
+
+        <MudNavMenu Class="pt-4">
+            <MudText Typo="Typo.subtitle2" Color="Color.Secondary" Class="px-4 mb-2">GERAL</MudText>
+
             <MudNavLink Href="/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
             <MudNavLink Href="/tickets" Icon="@Icons.Material.Filled.ConfirmationNumber">Meus Tickets</MudNavLink>
+
+            <MudDivider Class="my-4" />
+
+            <MudText Typo="Typo.subtitle2" Color="Color.Secondary" Class="px-4 mb-2">ADMINISTRAÇÃO</MudText>
+
+            <MudNavGroup Title="Configurações" Icon="@Icons.Material.Filled.Settings" Expanded="false">
+                <MudNavLink Href="/queues" Icon="@Icons.Material.Filled.ListAlt">Filas de Atendimento</MudNavLink>
+                <MudNavLink Href="/users" Icon="@Icons.Material.Filled.People">Usuários</MudNavLink>
+            </MudNavGroup>
         </MudNavMenu>
     </MudDrawer>
 
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
             @Body
         </MudContainer>
     </MudMainContent>
@@ -28,5 +72,9 @@
 
 @code {
     bool _drawerOpen = true;
-    void DrawerToggle() => _drawerOpen = !_drawerOpen;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
 }

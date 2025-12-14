@@ -1,4 +1,7 @@
-﻿using Microsoft.OpenApi;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using System.Text;
 
 namespace ServiceDesk.Api
 {
@@ -6,9 +9,12 @@ namespace ServiceDesk.Api
     {
         extension(IServiceCollection services)
         {
-            public IServiceCollection AddApiConfiguration()
+            public IServiceCollection AddApiConfiguration(IConfiguration configuration)
             {
-                services.AddSwaggerConfiguration();
+                services
+                    .AddSwaggerConfiguration()
+                    .AddJwtAuthentication(configuration);
+
 
                 return services;
             }
@@ -48,6 +54,57 @@ namespace ServiceDesk.Api
                 });
 
                 return services;
+            }
+
+            public IServiceCollection AddJwtAuthentication(IConfiguration configuration)
+            {
+                var secretKey = configuration["Jwt:Secret"];
+
+                if (string.IsNullOrEmpty(secretKey))
+                    throw new ArgumentNullException("Jwt:Secret", "A chave JWT não foi configurada no appsettings.json");
+
+                var key = Encoding.ASCII.GetBytes(secretKey);
+
+                services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = true,
+                        ValidIssuer = configuration["Jwt:Issuer"],
+                        ValidateAudience = true,
+                        ValidAudience = configuration["Jwt:Audience"],
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+                return services;
+            }
+        }
+
+        extension(WebApplication app)
+        {
+            public void ConfigureDevEnvironment()
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+                app.MapSwagger().RequireAuthorization();
+            }
+
+            public void UseSecurity()
+            {
+                app.UseAuthentication();
+                app.UseAuthorization();
             }
         }
     }

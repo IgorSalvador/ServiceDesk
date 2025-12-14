@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ServiceDesk.Application.Common.Interfaces;
 using ServiceDesk.Domain.Entities;
 using ServiceDesk.Infrastructure.Data;
+using ServiceDesk.Infrastructure.Data.Identity;
 using ServiceDesk.Infrastructure.Data.Seeds;
 
 namespace ServiceDesk.Infrastructure;
@@ -16,7 +18,8 @@ public static class InfrastructureConfiguration
         {
             services
                 .AddContext(configuration)
-                .AddIdentity();
+                .AddIdentity()
+                .AddServices();
 
             return services;
         }
@@ -51,9 +54,17 @@ public static class InfrastructureConfiguration
             return services;
         }
 
+        public IServiceCollection AddServices()
+        {
+            services.AddScoped<ITokenService, JwtTokenService>();
+
+            return services;
+        }
+
         public IServiceCollection AddRepositories()
         {
-            // Adicione aqui os repositórios
+            // Adicionar repositórios quando implementar
+
             return services;
         }
     }

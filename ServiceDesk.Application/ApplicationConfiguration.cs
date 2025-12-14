@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using ServiceDesk.Application.Common.Behaviors;
+using System.Reflection;
 
 namespace ServiceDesk.Application;
 
@@ -9,7 +13,12 @@ public static class ApplicationConfiguration
         public IServiceCollection AddApplication()
         {
             services.AddMediatR(cfg =>
-            cfg.RegisterServicesFromAssemblies(typeof(ApplicationConfiguration).Assembly));
+            {
+                cfg.RegisterServicesFromAssemblies(typeof(ApplicationConfiguration).Assembly);
+                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            });
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             return services;
         }

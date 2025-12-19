@@ -1,0 +1,37 @@
+﻿@page "/dashboard"
+@attribute [Authorize] 
+
+<PageTitle>Helpdesk - Dashboard</PageTitle>
+
+<MudContainer Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4"><b>Visão Geral</b></MudText>
+
+    <MudGrid>
+        <MudItem xs="12">
+            <MudAlert Severity="Severity.Info" Variant="Variant.Filled" Class="mb-4" Elevation="3">
+                <AuthorizeView>
+                    <Authorized>
+                        Olá, <b>@context.User.Identity?.Name</b>! Bem-vindo ao Helpdesk Enterprise.
+                    </Authorized>
+                </AuthorizeView>
+            </MudAlert>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="pa-6 d-flex flex-column align-center justify-center mud-theme-primary" Elevation="4">
+                <MudIcon Icon="@Icons.Material.Filled.ConfirmationNumber" Size="Size.Large" Class="mb-2"/>
+                <MudText Typo="Typo.h3"><b>12</b></MudText>
+                <MudText Typo="Typo.subtitle1">Novos Tickets</MudText>
+            </MudPaper>
+        </MudItem>
+        
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="pa-6 d-flex flex-column align-center justify-center" Elevation="4">
+                <MudIcon Icon="@Icons.Material.Filled.PendingActions" Color="Color.Warning" Size="Size.Large" Class="mb-2"/>
+                <MudText Typo="Typo.h3"><b>5</b></MudText>
+                <MudText Typo="Typo.subtitle1">Em Aberto</MudText>
+            </MudPaper>
+        </MudItem>
+        
+        </MudGrid>
+</MudContainer>

@@ -1,6 +1,10 @@
 ﻿@inherits LayoutComponentBase
+@using ServiceDesk.Web.Services.Auth
+@inject AuthService AuthService
+@inject NavigationManager Navigation
 
 <MudThemeProvider Theme="Configuration.Theme" />
+<MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -15,27 +19,34 @@
         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="ml-3">
             <MudIcon Icon="@Icons.Material.Filled.DisplaySettings" Color="Color.Primary" />
             <MudText Typo="Typo.h6" Color="Color.Primary" Style="font-weight: 700;">
-                HDE <span style="font-weight: 300; color: var(--mud-palette-text-secondary);">Enterprise</span>
+                Helpdesk <span style="font-weight: 300; color: var(--mud-palette-text-secondary);">Enterprise</span>
             </MudText>
         </MudStack>
 
         <MudSpacer />
 
-        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4">
+        <AuthorizeView>
+            <Authorized>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4">
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                        <MudStack Spacing="0" AlignItems="AlignItems.End">
+                            <MudText Typo="Typo.body2" Style="font-weight: 600;">@context.User.Identity?.Name</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">Conectado</MudText>
+                        </MudStack>
+                    </MudHidden>
 
-            <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                <MudStack Spacing="0" AlignItems="AlignItems.End">
-                    <MudText Typo="Typo.body2" Style="font-weight: 600;">Administrador</MudText>
-                    <MudText Typo="Typo.caption" Color="Color.Secondary">System Admin</MudText>
+                    <MudAvatar Color="Color.Primary" Variant="Variant.Outlined">
+                        @context.User.Identity?.Name?.FirstOrDefault().ToString().ToUpper()
+                    </MudAvatar>
+
+                    <MudTooltip Text="Sair do Sistema">
+                        <MudIconButton Icon="@Icons.Material.Filled.Logout"
+                                       Color="Color.Secondary"
+                                       OnClick="LogoutAsync" />
+                    </MudTooltip>
                 </MudStack>
-            </MudHidden>
-
-            <MudAvatar Color="Color.Primary" Variant="Variant.Outlined">A</MudAvatar>
-
-            <MudTooltip Text="Sair do Sistema">
-                <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Secondary" />
-            </MudTooltip>
-        </MudStack>
+            </Authorized>
+        </AuthorizeView>
 
     </MudAppBar>
 
@@ -73,8 +84,11 @@
 @code {
     bool _drawerOpen = true;
 
-    void DrawerToggle()
+    void DrawerToggle() => _drawerOpen = !_drawerOpen;
+
+    async Task LogoutAsync()
     {
-        _drawerOpen = !_drawerOpen;
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/login");
     }
 }

@@ -1,6 +1,10 @@
 ﻿@page "/"
 @page "/login"
 @layout LoginLayout
+@using ServiceDesk.Web.Services.Auth
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
 
 <PageTitle>ServiceDesk - Login</PageTitle>
 
@@ -93,8 +97,9 @@
     MudForm? form;
     bool success;
     bool processing = false;
-    string email = "";
-    string password = "";
+
+    string email = string.Empty;
+    string password = string.Empty;
     bool isPasswordVisible;
     InputType passwordInputType = InputType.Password;
     string passwordInputIcon = Icons.Material.Filled.VisibilityOff;
@@ -121,7 +126,24 @@
         if (!form.IsValid) return;
 
         processing = true;
-        await Task.Delay(2000);
+
+        var request = new LoginRequest { Email = email, Password = password };
+        var result = await AuthService.LoginAsync(request);
+
         processing = false;
+
+        // 3. Tratamento
+        if (result.Succeeded)
+        {
+            Snackbar.Add($"Bem-vindo, {result.Data!.FullName}!", Severity.Success);
+            Navigation.NavigateTo("/dashboard"); // Redireciona
+        }
+        else
+        {
+            foreach (var error in result.Errors)
+            {
+                Snackbar.Add(error, Severity.Error);
+            }
+        }
     }
 }

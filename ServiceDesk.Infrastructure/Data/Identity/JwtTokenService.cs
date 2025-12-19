@@ -14,10 +14,10 @@ public class JwtTokenService(IConfiguration configuration) : ITokenService
     {
         var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name, user.UserName ?? string.Empty)
+                new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new(JwtRegisteredClaimNames.UniqueName, user.UserName ?? string.Empty),
+                new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
         foreach (var role in roles)

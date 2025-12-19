@@ -13,8 +13,8 @@ public static class BuilderExtension
         {
             builder.Services.AddControllers();
 
-            ApiConfiguration.BackendUrls = builder.Configuration.GetValue<List<string>>("BackendUrls") ?? [];
-            ApiConfiguration.FrontendUrls = builder.Configuration.GetValue<List<string>>("FrontendUrls") ?? [];
+            ApiConfiguration.BackendUrls = builder.Configuration.GetSection("BackendUrls").Get<List<string>>() ?? [];
+            ApiConfiguration.FrontendUrls = builder.Configuration.GetSection("FrontendUrls").Get<List<string>>() ?? [];
         }
 
         public void AddDocumentation()
@@ -25,7 +25,7 @@ public static class BuilderExtension
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "HDE Helpdesk Enterprise API",
+                    Title = "Helpdesk Enterprise API",
                     Version = "v1",
                     Description = "API de Gestão de Chamados e Workflows Corporativos",
                     Contact = new OpenApiContact

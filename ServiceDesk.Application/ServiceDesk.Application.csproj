@@ -18,11 +18,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ServiceDesk.Domain\ServiceDesk.Domain.csproj" />
+    <ProjectReference Include="..\ServiceDesk.Infrastructure\ServiceDesk.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Queues\Commands\" />
-    <Folder Include="Features\Queues\Queries\" />
     <Folder Include="Features\Tickets\Commands\" />
     <Folder Include="Features\Tickets\Queries\" />
     <Folder Include="Features\Workflows\Commands\" />
